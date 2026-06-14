@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DocTrack — Document Monitoring & SLA System</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- LOGIN PAGE -->
+  <div id="loginPage" class="login-page">
+    <div class="login-card">
+      <div class="logo">
+        <div class="logo-icon">📄</div>
+        <div>
+          <h1>DocTrack</h1>
+          <p>SLA Monitoring System</p>
+        </div>
+      </div>
+      <div class="tabs">
+        <button class="tab active" data-tab="login">Sign In</button>
+        <button class="tab" data-tab="signup">Sign Up</button>
+      </div>
+
+      <form id="loginForm" class="auth-form active">
+        <label>Email</label>
+        <input type="email" id="loginEmail" required placeholder="you@company.com" />
+        <label>Password</label>
+        <input type="password" id="loginPassword" required placeholder="••••••••" />
+        <button type="submit" class="btn-primary">Sign In</button>
+        <p class="hint">Demo: <b>dataWhs@gmail.com</b> / <b>Mgxpass02</b></form>
+
+      <form id="signupForm" class="auth-form">
+        <label>Full Name</label>
+        <input type="text" id="signupName" required />
+        <label>Department</label>
+        <input type="text" id="signupDept" required placeholder="e.g. Finance" />
+        <label>Email</label>
+        <input type="email" id="signupEmail" required />
+        <label>Password</label>
+        <input type="password" id="signupPassword" required minlength="6" />
+        <button type="submit" class="btn-primary">Create Account</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div id="app" class="app hidden">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-icon small">📄</div>
+        <div>
+          <div class="brand">DocTrack</div>
+          <div class="brand-sub">SLA Monitor</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a class="nav-link active" data-page="dashboard">📊 Dashboard</a>
+        <a class="nav-link" data-page="documents">📁 Documents</a>
+        <a class="nav-link" data-page="uploads">📤 Uploads</a>
+        <a class="nav-link" data-page="reports">📈 Reports</a>
+        <a class="nav-link" data-page="activity">🕒 Activity Log</a>
+      </nav>
+      <div class="sidebar-footer">v1.0 · Internal</div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div class="topbar-title">Document Monitoring System</div>
+        <div class="topbar-actions">
+          <button id="themeToggle" class="icon-btn" title="Toggle theme">🌙</button>
+          <button id="notifBtn" class="icon-btn" title="Notifications">🔔<span id="notifDot" class="dot hidden"></span></button>
+          <div class="user-chip">
+            <div class="avatar" id="userAvatar">U</div>
+            <div class="user-meta">
+              <div id="userName">User</div>
+              <div id="userRole" class="role">USER</div>
+            </div>
+          </div>
+          <button id="logoutBtn" class="btn-ghost">Sign out</button>
+        </div>
+      </header>
+
+      <main id="pageContent" class="content"></main>
+    </div>
+
+    <!-- Notifications panel -->
+    <div id="notifPanel" class="notif-panel hidden">
+      <div class="notif-header">Notifications</div>
+      <div id="notifList" class="notif-list"></div>
+    </div>
+  </div>
+
+  <!-- Document Modal -->
+  <div id="docModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalTitle">New Document</h3>
+        <button class="icon-btn" id="modalClose">✕</button>
+      </div>
+      <form id="docForm" class="modal-body">
+        <div class="grid-2">
+          <div>
+            <label>Title *</label>
+            <input type="text" id="dTitle" required />
+          </div>
+          <div>
+            <label>Reference No.</label>
+            <input type="text" id="dRef" />
+          </div>
+          <div>
+            <label>Type *</label>
+            <select id="dType" required>
+              <option>STB</option><option>STF</option><option>CATALOG REQUEST</option>
+              <option>INVENTORY TRANSFER</option><option>Report</option>
+            </select>
+          </div>
+          <div>
+            <label>Assigned To *</label>
+            <input type="text" id="dAssignee" required />
+          </div>
+          <div>
+            <label>Start Date *</label>
+            <input type="date" id="dStart" required />
+          </div>
+          <div>
+            <label>Allowed Days *</label>
+            <input type="number" id="dDays" min="1" value="2" required />
+          </div>
+          <div>
+            <label>Status</label>
+            <select id="dStatus">
+              <option value="active">Active</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
+          <div>
+            <label>Priority</label>
+            <select id="dPriority">
+              <option>Low</option><option selected>Medium</option><option>High</option>
+            </select>
+          </div>
+        </div>
+        <label>Description</label>
+        <textarea id="dDesc" rows="3"></textarea>
+        <label>Attachment (file name only — demo)</label>
+        <input type="file" id="dFile" />
+        <div class="modal-actions">
+          <button type="button" class="btn-ghost" id="modalCancel">Cancel</button>
+          <button type="submit" class="btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- Supabase SDK + config (added for real-time DB + storage) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="script.js"></script>
+  <!-- Real-time cross-device sync (does not change existing logic) -->
+  <script src="sync.js"></script>
+  <script>
+    // Make sure login on a fresh device waits for the cloud users list
+    // to load before validating credentials.
+    (function () {
+      let bypass = false;
+      document.addEventListener("submit", async function (e) {
+        const f = e.target;
+        if (!f || (f.id !== "loginForm" && f.id !== "signupForm")) return;
+        if (bypass) return;
+        if (!window.DTSync) return;
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        const btn = f.querySelector('button[type="submit"]');
+        const old = btn ? btn.textContent : "";
+        if (btn) { btn.disabled = true; btn.textContent = "Syncing…"; }
+        try {
+          await window.DTSync.whenReady();
+          await window.DTSync.reloadUsers();
+        } catch {}
+        if (btn) { btn.disabled = false; btn.textContent = old; }
+        bypass = true;
+        f.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+        bypass = false;
+      }, true);
+    })();
+  </script>
+  <script src="services/notif.js"></script>
+</body>
+</html>
